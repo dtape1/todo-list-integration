@@ -3,7 +3,11 @@ from tkinter import messagebox, filedialog
 from task_manager import TaskManager
 import logging
 
-logging.basicConfig(filename="app.log", level=logging.INFO)
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    encoding="utf-8"
+)
 
 manager = TaskManager()
 
