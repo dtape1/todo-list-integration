@@ -1,6 +1,11 @@
+"""
+Головний модуль графічного інтерфейсу To-Do List застосунку.
+Використовує tkinter для GUI та TaskManager для керування задачами.
+"""
+
 import tkinter as tk
 from tkinter import messagebox, filedialog
-from task_manager import TaskManager
+from task_manager_optimized import TaskManager
 import logging
 
 logging.basicConfig(
@@ -11,14 +16,19 @@ logging.basicConfig(
 
 manager = TaskManager()
 
-# --- оновлення списку ---
+
 def update_listbox():
+    """Оновлює відображення списку задач у listbox."""
     listbox.delete(0, tk.END)
     for i, task in enumerate(manager.tasks, 1):
         listbox.insert(tk.END, f"{i}. {task}")
 
-# --- вибір задачі ---
+
 def select_task(event):
+    """
+    Обробник події вибору задачі у listbox.
+    Заповнює поле введення обраною задачею.
+    """
     try:
         selected = listbox.curselection()[0]
         entry.delete(0, tk.END)
@@ -26,8 +36,9 @@ def select_task(event):
     except IndexError:
         pass
 
-# --- відкрити файл ---
+
 def open_file():
+    """Відкриває діалог вибору файлу та завантажує задачі з нього."""
     filepath = filedialog.askopenfilename(
         filetypes=[("Text files", "*.txt")]
     )
@@ -36,8 +47,9 @@ def open_file():
         logging.info("Файл відкрито")
         update_listbox()
 
-# --- зберегти як ---
+
 def save_file():
+    """Відкриває діалог збереження та зберігає задачі у файл."""
     filepath = filedialog.asksaveasfilename(
         defaultextension=".txt",
         filetypes=[("Text files", "*.txt")]
@@ -47,8 +59,9 @@ def save_file():
         logging.info("Файл збережено")
         messagebox.showinfo("Успіх", "Файл збережено")
 
-# --- додавання ---
+
 def add_task():
+    """Зчитує текст з поля введення та додає нову задачу."""
     task = entry.get()
     if manager.add_task(task):
         logging.info("Додано задачу")
@@ -57,8 +70,9 @@ def add_task():
     else:
         messagebox.showwarning("Помилка", "Введіть завдання")
 
-# --- видалення ---
+
 def delete_task():
+    """Видаляє обрану задачу зі списку."""
     try:
         selected = listbox.curselection()[0]
         if manager.delete_task(selected):
@@ -67,8 +81,9 @@ def delete_task():
     except IndexError:
         messagebox.showwarning("Помилка", "Оберіть завдання")
 
-# --- редагування ---
+
 def edit_task():
+    """Замінює текст обраної задачі на новий із поля введення."""
     try:
         selected = listbox.curselection()[0]
         new_text = entry.get()
@@ -82,7 +97,8 @@ def edit_task():
     except IndexError:
         messagebox.showwarning("Помилка", "Оберіть завдання")
 
-# --- вікно ---
+
+# --- Побудова вікна ---
 root = tk.Tk()
 root.title("To-Do List")
 root.geometry("400x500")
